@@ -1,23 +1,18 @@
-#Сюда подтягиваем код:)
-#https://github.com/AppLoidx/vk_bot.git
-from random import randrange
-
 import vk_api
+import configparser
+from random import randrange
 from vk_api.longpoll import VkLongPoll, VkEventType
 
-# token = input('Token: ')
+config = configparser.ConfigParser() 
+config.read("settings.ini")
+bottoken = config["Tokens"]["vk"]
 
-
+vk = vk_api.VkApi(token=bottoken)
+longpoll = VkLongPoll(vk)
 
 
 def write_msg(user_id, message):
     vk.method('messages.send', {'user_id': user_id, 'message': message,  'random_id': randrange(10 ** 7),})
-
-token = ''
-
-
-vk = vk_api.VkApi(token=token)
-longpoll = VkLongPoll(vk)
 
 
 for event in longpoll.listen():
