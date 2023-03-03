@@ -4,7 +4,7 @@ def user_info(user_id, token):
     url_info = 'https://api.vk.com/method/users.get'
     params = {
         'user_ids': user_id,
-        'fields': 'sex, city, maiden_name',
+        'fields': 'sex, city, maiden_name, bdate',
         'access_token': token,
         'v': 5.131
     }
@@ -13,8 +13,9 @@ def user_info(user_id, token):
     for value in res["response"]:
         city = value['city']['title']
         sex = value['sex']
+        bdate = value['bdate']
         name = value['first_name'] + ' ' + value['last_name']
-        user_list = [city, sex, name]
+        user_list = [city, sex, name, bdate]
         print(user_list)
 
         return user_list

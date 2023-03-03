@@ -19,3 +19,4 @@ access_token = ''
 user_id = ''
 vk = VK(access_token, user_id)
 print(vk.users_info())
+
