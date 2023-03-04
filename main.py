@@ -2,11 +2,12 @@ import vk_api
 import configparser
 from random import randrange
 from vk_api.longpoll import VkLongPoll, VkEventType
-from info_user import user_info#импорт функции для личных данных
+from info_user import send_main#импорт функции для личных данных
 
 config = configparser.ConfigParser() 
 config.read("settings.ini")
-bottoken = config["Tokens"]["vk"]
+bottoken = config["Tokens"]["vk_group"]
+perstoken = config["Tokens"]["vk_pers"]
 
 vk = vk_api.VkApi(token=bottoken)
 longpoll = VkLongPoll(vk)
@@ -27,8 +28,8 @@ for event in longpoll.listen():
             if request == "привет":
                 write_msg(event.user_id, f"Хай, {event.user_id}. Хоте ли бы вы познакомиться с новыми людьми? Напишите да/нет")
             elif request == "да":
-                user_list = user_info(event.user_id, bottoken)  # личные данные списком(ИФ, город, пол, дата рождения)
-                write_msg(event.user_id, f"3 человека")
+                profile_3 = send_main()
+                write_msg(event.user_id, f'{profile_3}')
                 pass#делаем поиск людей
             elif request == "нет":
                 write_msg(event.user_id, f"Это чат для знакомств, нам больше нечего предложить, досвидания")
