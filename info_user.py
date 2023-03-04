@@ -13,8 +13,8 @@ def user_info(user_id, token):
     for value in res["response"]:
         city = value['city']['title']
         sex = value['sex']
-        bdate = value['bdate']
         name = value['first_name'] + ' ' + value['last_name']
+        bdate = value['bdate']
         user_list = [city, sex, name, bdate]
         print(user_list)
 
