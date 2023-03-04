@@ -6,7 +6,8 @@ from info_user import user_info
 
 config = configparser.ConfigParser() 
 config.read("settings.ini")
-bottoken = config["Tokens"]["vk"]
+bottoken = config["Tokens"]["vk_group"]
+perstoken = config["Tokens"]["vk_pers"]
 
 vk = vk_api.VkApi(token=bottoken)
 longpoll = VkLongPoll(vk)
