@@ -29,7 +29,9 @@ for event in longpoll.listen():
                 write_msg(event.user_id, f"Хай, {event.user_id}. Хоте ли бы вы познакомиться с новыми людьми? Напишите да/нет")
             elif request == "да":
                 profile_3 = send_main()
-                write_msg(event.user_id, f'{profile_3}')
+                write_msg(event.user_id, f'{profile_3[0][0]}\n {profile_3[0][1]}\n {profile_3[0][2][0]}\n {profile_3[0][2][1]}\n {profile_3[0][2][0]}\n')
+                write_msg(event.user_id, f'{profile_3[1][0]}\n {profile_3[1][1]}\n {profile_3[1][2][0]}\n {profile_3[1][2][1]}\n {profile_3[1][2][0]}\n')
+                write_msg(event.user_id, f'{profile_3[2][0]}\n {profile_3[2][1]}\n {profile_3[2][2][0]}\n {profile_3[2][2][1]}\n {profile_3[2][2][0]}\n')
                 pass#делаем поиск людей
             elif request == "нет":
                 write_msg(event.user_id, f"Это чат для знакомств, нам больше нечего предложить, досвидания")
