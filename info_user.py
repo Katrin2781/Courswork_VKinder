@@ -24,12 +24,13 @@ class VkDownloader():
         }
         res = requests.get(url_info, params=params).json()
 
+        print(res)
         for value in res["response"]:
             city = value['city']
             sex = value['sex']
             bdate = value['bdate']
             name = value['first_name'] + ' ' + value['last_name']
-            user_list = [city, sex, name, bdate]
+            user_list = [city, sex, name, bdate, user_id]
             print(user_list)
             return user_list
 
@@ -131,16 +132,17 @@ def send_main():#функция для вызова всех функций
         profile_3.append(profile)
     return profile_3#криво возвращает 3 профиля с ИФ+ссылка+3ссылки на фото
 
-#закомментил для связи с main
+# закомментил для связи с main
 # if __name__== '__main__':
-#     send_main()#вызов функции
-#     vk = VkDownloader(bottoken)
-#     vk_2 = VkDownloader(perstoken)
-#     user_list = vk_2.user_info(117971802)
-#     get_info_3 = vk_2.user_search(user_list)
-#     for values in get_info_3["response"]["items"]:
-#         photo_profile = vk_2.get_photo(id)
-#         link_id = f'https://vk.com/id{id}'
-#         name = values["first_name"] + ' ' + values["last_name"]
+#     a = send_main()#вызов функции
+#     print(a)
+    # vk = VkDownloader(bottoken)
+    # vk_2 = VkDownloader(perstoken)
+    # user_list = vk_2.user_info(117971802)
+    # get_info_3 = vk_2.user_search(user_list)
+    # for values in get_info_3["response"]["items"]:
+    #     photo_profile = vk_2.get_photo(id)
+    #     link_id = f'https://vk.com/id{id}'
+    #     name = values["first_name"] + ' ' + values["last_name"]
 
 
