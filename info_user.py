@@ -1,6 +1,9 @@
 import requests
 from datetime import date
 import configparser
+# from main import my_id
+
+user_id = 117971802#введите свой айди, я пока в размышлениях
 
 config = configparser.ConfigParser() 
 config.read("settings.ini")
@@ -24,31 +27,15 @@ class VkDownloader():
         }
         res = requests.get(url_info, params=params).json()
 
-        print(res)
         for value in res["response"]:
             city = value['city']
             sex = value['sex']
             bdate = value['bdate']
             name = value['first_name'] + ' ' + value['last_name']
             user_list = [city, sex, name, bdate, user_id]
-            print(user_list)
+            # print(user_list)
             return user_list
 
-        
-    # Используется только Токен персональный
-    # def get_city_id(self, name):
-    #     url_info = 'https://api.vk.com/method/database.getCities'
-    #     params = {
-    #         'country_id': 1,
-    #         'need_all': 0,
-    #         'q': name,
-    #         'access_token': self.token,
-    #         'v': 5.131
-    #     }
-    #     res = requests.get(url_info, params=params).json()
-    #     id = res["response"]['items'][0]['id']
-    #     return id
-       
     # Используется только Токен персональный
     def user_search(self, data):
         url_info = 'https://api.vk.com/method/users.search'
@@ -91,29 +78,25 @@ class VkDownloader():
         photo_3 = []
         #находим ссылки на фото и количество лайков, создаем словари и добавляем их в списко
         for values in res["response"]["items"]:
-            file_url = values["sizes"][-1]["url"]
             file_likes = values["likes"]["count"]
-            file_photo = {file_likes: file_url}
-
+            id_photo = values["id"]
+            file_photo = {'id_photo': id_photo, 'likes': file_likes}
             photo_all.append(file_photo)
 
         #все лайки переношу в список, сортирую, оставляю 3 самых больших значения
         num = []
         for links in photo_all:
-            for key, value in links.items():
-                num.append(key)
+            num.append(links['likes'])
         num.sort()
         num = [num[-1], num[-2], num[-3]]
-
         #нахожу ссылки на фото по 3 максимальным значениям(умнее не придумал)
         for links in photo_all:
-            for key, value in links.items():
-                if  key == num[0]:
-                    photo_3.append(value)
-                elif key == num[1]:
-                    photo_3.append(value)
-                elif key == num[2]:
-                    photo_3.append(value)
+            if links['likes'] == num[0]:
+                photo_3.append(links['id_photo'])
+            elif links['likes'] == num[1]:
+                photo_3.append(links['id_photo'])
+            elif links['likes'] == num[2]:
+                photo_3.append(links['id_photo'])
 
         return photo_3
 
@@ -121,28 +104,26 @@ class VkDownloader():
 def send_main():#функция для вызова всех функций
     profile_3 = []
     vk_2 = VkDownloader(perstoken)
-    user_list = vk_2.user_info(117971802)#
+    user_list = vk_2.user_info(user_id)#
     get_info_3 = vk_2.user_search(user_list)#
     for values in get_info_3["response"]["items"]:
-        id = values["id"]
-        photo_profile = vk_2.get_photo(id)
-        link_id = f'https://vk.com/id{id}'
+        id_person = values["id"]
+        photo_profile = vk_2.get_photo(id_person)
+        attachment = []
+        for photo in photo_profile:
+            attachment_one = f'photo{id_person}_{photo}'
+            attachment.append(attachment_one)
+        attachment = ','.join(attachment)
+        link_id = f'https://vk.com/id{id_person}'
         name = values["first_name"] + ' ' + values["last_name"]
-        profile = [name, link_id, photo_profile]#
+        profile = {'id': id_person, 'name': name, 'link_id': link_id, 'attachment': attachment, 'user_id': user_list[4]}#
         profile_3.append(profile)
-    return profile_3#криво возвращает 3 профиля с ИФ+ссылка+3ссылки на фото
+    return profile_3#словарь с данными 3 человеков)
 
 # закомментил для связи с main
 # if __name__== '__main__':
 #     a = send_main()#вызов функции
 #     print(a)
-    # vk = VkDownloader(bottoken)
-    # vk_2 = VkDownloader(perstoken)
-    # user_list = vk_2.user_info(117971802)
-    # get_info_3 = vk_2.user_search(user_list)
-    # for values in get_info_3["response"]["items"]:
-    #     photo_profile = vk_2.get_photo(id)
-    #     link_id = f'https://vk.com/id{id}'
-    #     name = values["first_name"] + ' ' + values["last_name"]
+
 
 

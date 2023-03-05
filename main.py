@@ -2,7 +2,7 @@ import vk_api
 import configparser
 from random import randrange
 from vk_api.longpoll import VkLongPoll, VkEventType
-from info_user import send_main#импорт функции для личных данных
+from message_send_photo import message_send_photo
 
 config = configparser.ConfigParser() 
 config.read("settings.ini")
@@ -20,19 +20,15 @@ for event in longpoll.listen():
 
     if event.type == VkEventType.MESSAGE_NEW:
 
-
         if event.to_me:
 
             request = event.text
 
             if request == "привет":
+
                 write_msg(event.user_id, f"Хай, {event.user_id}. Хоте ли бы вы познакомиться с новыми людьми? Напишите да/нет")
             elif request == "да":
-                profile_3 = send_main()
-                write_msg(event.user_id, f'{profile_3[0][0]}\n {profile_3[0][1]}\n {profile_3[0][2][0]}\n {profile_3[0][2][1]}\n {profile_3[0][2][0]}\n')
-                write_msg(event.user_id, f'{profile_3[1][0]}\n {profile_3[1][1]}\n {profile_3[1][2][0]}\n {profile_3[1][2][1]}\n {profile_3[1][2][0]}\n')
-                write_msg(event.user_id, f'{profile_3[2][0]}\n {profile_3[2][1]}\n {profile_3[2][2][0]}\n {profile_3[2][2][1]}\n {profile_3[2][2][0]}\n')
-                pass#делаем поиск людей
+                message_send_photo(bottoken)#вызов функции и вывод 3 человек в сообщении
             elif request == "нет":
                 write_msg(event.user_id, f"Это чат для знакомств, нам больше нечего предложить, досвидания")
             elif request == "пока":
