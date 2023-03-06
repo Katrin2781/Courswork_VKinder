@@ -2,7 +2,7 @@ import requests
 from random import randrange
 from info_user import send_main
 
-profile_3 = send_main()
+profile_3 = send_main(user_id)
 
 def message_send_photo(bottoken):#функция принимает токен группы и словарь с данными людей
 

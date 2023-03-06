@@ -33,7 +33,6 @@ class VkDownloader():
             bdate = value['bdate']
             name = value['first_name'] + ' ' + value['last_name']
             user_list = [city, sex, name, bdate, user_id]
-            # print(user_list)
             return user_list
 
     # Используется только Токен персональный
@@ -89,7 +88,7 @@ class VkDownloader():
             num.append(links['likes'])
         num.sort()
         num = [num[-1], num[-2], num[-3]]
-        #нахожу ссылки на фото по 3 максимальным значениям(умнее не придумал)
+        #нахожу id на фото по 3 максимальным значениям(умнее не придумал)
         for links in photo_all:
             if links['likes'] == num[0]:
                 photo_3.append(links['id_photo'])
@@ -101,7 +100,7 @@ class VkDownloader():
         return photo_3
 
 
-def send_main():#функция для вызова всех функций
+def send_main(user_id):#функция для вызова всех функций
     profile_3 = []
     vk_2 = VkDownloader(perstoken)
     user_list = vk_2.user_info(user_id)#
