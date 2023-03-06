@@ -1,11 +1,10 @@
 import requests
 from random import randrange
-from info_user import send_main
+from get_profile_3 import get_profile_3
 
-profile_3 = send_main(user_id)
 
-def message_send_photo(bottoken):#функция принимает токен группы и словарь с данными людей
-
+def message_send_photo(user_id, bottoken, perstoken):#функция принимает токен группы и словарь с данными людей
+    profile_3 = get_profile_3(user_id, perstoken)
     for info in profile_3:#распаковываем словарь, присваивая значения из него
         user_id = info['user_id']#ваш id
         name = info['name']#имя и фамилия челвоека
