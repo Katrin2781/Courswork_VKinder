@@ -2,7 +2,6 @@ import requests
 from datetime import date
 from random import randrange
 from DB_vkinder import insert_user
-from config_read import perstoken,bottoken
 
 class VkDownloader():
 
@@ -132,5 +131,3 @@ class VkDownloader():
                 'v': 5.131
             }
             requests.get(url_photo, params=params)#печатаем в чат
-
-
