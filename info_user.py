@@ -1,6 +1,8 @@
 import requests
 from datetime import date
 from DB_vkinder import insert_user
+from config_read import perstoken, bottoken
+
 
 class VkDownloader():
 
@@ -25,7 +27,8 @@ class VkDownloader():
             name = value['first_name'] + ' ' + value['last_name']
             user_list = [city, sex, name, bdate, user_id]
 
-            insert_user(user_list)
+            # insert_user(user_list)
+            print(user_list)
             return user_list
 
     # Используется только Токен персональный
@@ -93,6 +96,30 @@ class VkDownloader():
 
         return photo_3
 
+def send_main():#функция для вызова всех функций
+    profile_3 = []
+    vk = VkDownloader(bottoken)
+    vk_2 = VkDownloader(perstoken)
+    user_list = vk.user_info(117971802)#
+    get_info_3 = vk.user_search(user_list)#
+    print(get_info_3)
+    # for values in get_info_3["response"]["items"]:
+    #     id_person = values["id"]
+    #     photo_profile = vk_2.get_photo(id_person)
+    #     attachment = []
+    #     for photo in photo_profile:
+    #         attachment_one = f'photo{id_person}_{photo}'
+    #         attachment.append(attachment_one)
+    #     attachment = ','.join(attachment)
+    #     link_id = f'https://vk.com/id{id_person}'
+    #     name = values["first_name"] + ' ' + values["last_name"]
+    #     profile = {'id': id_person, 'name': name, 'link_id': link_id, 'attachment': attachment, 'user_id': user_list[4]}#
+    #     profile_3.append(profile)
+    # return profile_3#словарь с данными 3 человеков)
 
+# закомментил для связи с main
+if __name__== '__main__':
+    a = send_main()#вызов функции
+    print(a)
 
 

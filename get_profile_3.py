@@ -1,10 +1,13 @@
 from info_user import VkDownloader
 
-def get_profile_3(user_id, perstoken):#функция для вызова всех функций
-    vk_2 = VkDownloader(perstoken)
-    user_list = vk_2.user_info(user_id)#
-    get_info_3 = vk_2.user_search(user_list)#
+def get_profile_3(user_id, bottoken, perstoken):#функция для вызова всех функций
+    vk = VkDownloader(bottoken)
+    vk_2 = VkDownloader(perstoken)#создание объекта
+    user_list = vk.user_info(user_id)#вызов функции с персональными данными
+    user_list2 = vk_2.user_info(user_id)
+    get_info_3 = vk_2.user_search(user_list2)#вызов функции с 3 id пользователей
     profile_3 = []
+    print(get_info_3)
     for values in get_info_3["response"]["items"]:
         id_person = values["id"]
         photo_profile = vk_2.get_photo(id_person)
