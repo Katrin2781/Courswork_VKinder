@@ -27,7 +27,7 @@ class VkDownloader():
             name = value['first_name'] + ' ' + value['last_name']
             user_list = [city, sex, name, bdate, user_id]
 
-            insert_user(user_list)
+            # insert_user(user_list)
             return user_list
 
     # Используется только Токен персональный
@@ -44,12 +44,16 @@ class VkDownloader():
         year = int(get_year[2])
         age = today.year - year - ((today.month, today.day) < (month, day))
         params = {
-            'count': 3,
-            'fields': 'photo_max',
+            'count': 1000,
+            'fields': 'photo_max, has_photo, is_closed',
             'city': data[0]["id"],
             'sex': sex,
             'age_from': age - 3,
             'age_to': age + 3,
+            # 'fields': 'has_photo: 1, is_closed=0',
+            # 'has_photo': 1,
+            # 'is_closed': True,
+            # 'can_access_closed': 2,
             'access_token': self.token,
             'v': 5.131
             }
@@ -62,13 +66,15 @@ class VkDownloader():
             'owner_id': id,
             'album_id': 'profile',
             'extended': 1,
-            'photo_sizes': 0,
+            'photo_sizes': 1,
             'access_token': self.token,
             'v': 5.131
         }
         res = requests.get(url_photo, params=params).json()
 
-        photo_all =[]
+        # print(res)
+        # print(res["response"]["count"])
+        photo_all = []
         photo_3 = []
         #находим ссылки на фото и количество лайков, создаем словари и добавляем их в списко
         for values in res["response"]["items"]:
@@ -76,7 +82,7 @@ class VkDownloader():
             id_photo = values["id"]
             file_photo = {'id_photo': id_photo, 'likes': file_likes}
             photo_all.append(file_photo)
-
+        # print(photo_all)
         #все лайки переношу в список, сортирую, оставляю 3 самых больших значения
         num = []
         for links in photo_all:
@@ -95,30 +101,30 @@ class VkDownloader():
 
         return photo_3
 
-# def send_main():#функция для вызова всех функций
-#     profile_3 = []
-#     vk = VkDownloader(bottoken)
-#     vk_2 = VkDownloader(perstoken)
-#     user_list = vk.user_info(117971802)#
-#     get_info_3 = vk.user_search(user_list)#
-#     print(get_info_3)
-#     # for values in get_info_3["response"]["items"]:
-#     #     id_person = values["id"]
-#     #     photo_profile = vk_2.get_photo(id_person)
-#     #     attachment = []
-#     #     for photo in photo_profile:
-#     #         attachment_one = f'photo{id_person}_{photo}'
-#     #         attachment.append(attachment_one)
-#     #     attachment = ','.join(attachment)
-#     #     link_id = f'https://vk.com/id{id_person}'
-#     #     name = values["first_name"] + ' ' + values["last_name"]
-#     #     profile = {'id': id_person, 'name': name, 'link_id': link_id, 'attachment': attachment, 'user_id': user_list[4]}#
-#     #     profile_3.append(profile)
-#     # return profile_3#словарь с данными 3 человеков)
-#
-# # закомментил для связи с main
-# if __name__== '__main__':
-#     a = send_main()#вызов функции
-#     print(a)
+def send_main():#функция для вызова всех функций
+    profile_1000 = []
+    vk = VkDownloader(bottoken)
+    vk_2 = VkDownloader(perstoken)
+    user_list = vk.user_info(117971802)#
+    get_info_1000 = vk_2.user_search(user_list)#
+    for values in get_info_1000["response"]["items"]:
+        if values["is_closed"] == False and values["has_photo"] == 1:
+            id_person = values["id"]
+            photo_profile = vk_2.get_photo(id_person)
+            attachment = []
+            for photo in photo_profile:
+                attachment_one = f'photo{id_person}_{photo}'
+                attachment.append(attachment_one)
+            attachment = ','.join(attachment)
+            link_id = f'https://vk.com/id{id_person}'
+            name = values["first_name"] + ' ' + values["last_name"]
+            profile = {'id': id_person, 'name': name, 'link_id': link_id, 'attachment': attachment, 'user_id': user_list[4]}#
+            profile_1000.append(profile)
+    return profile_1000#словарь с данными 3 человеков)
+
+# закомментил для связи с main
+if __name__== '__main__':
+    a = send_main()#вызов функции
+    print(a)
 
 
