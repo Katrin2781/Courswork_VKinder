@@ -2,6 +2,8 @@ import requests
 from datetime import date
 from random import randrange
 from DB_vkinder import insert_user
+from config_read import perstoken, bottoken
+
 
 class VkDownloader():
 
@@ -84,7 +86,7 @@ class VkDownloader():
             if links['likes'] in max_numbers:
                 photo_3.append(links['id_photo'])
         return photo_3
-    
+
     
     def get_profile_3(self, user_id):#функция для вызова всех функций
         user_list = self.user_info(user_id)#
