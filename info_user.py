@@ -1,9 +1,10 @@
 import requests
 from datetime import date
 import configparser
+from DB_vkinder import insert_user
 # from main import my_id
 
-user_id = 117971802#введите свой айди, я пока в размышлениях
+# user_id = 117971802#введите свой айди, я пока в размышлениях
 
 config = configparser.ConfigParser() 
 config.read("settings.ini")
@@ -34,6 +35,7 @@ class VkDownloader():
             name = value['first_name'] + ' ' + value['last_name']
             user_list = [city, sex, name, bdate, user_id]
             # print(user_list)
+            insert_user(user_list)
             return user_list
 
     # Используется только Токен персональный
@@ -101,7 +103,7 @@ class VkDownloader():
         return photo_3
 
 
-def send_main():#функция для вызова всех функций
+def send_main(user_id):#функция для вызова всех функций
     profile_3 = []
     vk_2 = VkDownloader(perstoken)
     user_list = vk_2.user_info(user_id)#

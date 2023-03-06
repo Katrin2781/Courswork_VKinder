@@ -28,7 +28,7 @@ for event in longpoll.listen():
 
                 write_msg(event.user_id, f"Хай, {event.user_id}. Хоте ли бы вы познакомиться с новыми людьми? Напишите да/нет")
             elif request == "да":
-                message_send_photo(bottoken)#вызов функции и вывод 3 человек в сообщении
+                message_send_photo(bottoken, event.user_id)#вызов функции и вывод 3 человек в сообщении
             elif request == "нет":
                 write_msg(event.user_id, f"Это чат для знакомств, нам больше нечего предложить, досвидания")
             elif request == "пока":
