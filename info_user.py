@@ -2,8 +2,6 @@ import requests
 from datetime import date
 from random import randrange
 from DB_vkinder import insert_user
-from config_read import perstoken, bottoken
-
 
 class VkDownloader():
 
@@ -27,7 +25,7 @@ class VkDownloader():
             name = value['first_name'] + ' ' + value['last_name']#ваше имя и фамилия
             user_list = [city, sex, name, bdate, user_id]#общий лист с вашими данными
 
-            # insert_user(user_list)
+            insert_user(user_list)
             return user_list
 
     # Используется только Токен персональный
@@ -140,4 +138,4 @@ class VkDownloader():
         }
 
         requests.get(url_photo, params=params)#печатаем в чат
-
+        return profile_1
