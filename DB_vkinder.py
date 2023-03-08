@@ -48,13 +48,6 @@ def connect_db():
                                     blacklist BOOLEAN DEFAULT FALSE
                                     );
                                     ''')
-                cursor.execute('''create table if not exists elect(
-                                    id_person SERIAL primary key,
-                                    user_id SERIAL primary key,
-                                    name VARCHAR(50),
-                                    link VARCHAR(50),
-                                    );
-                                    ''')
                 con.commit()
                 print("Таблицы успешно созданы в PostgreSQL")
             else:

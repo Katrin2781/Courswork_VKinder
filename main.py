@@ -46,13 +46,17 @@ for event in longpoll.listen():
                 n_keyboard.add_button('elect', VkKeyboardColor.POSITIVE)
                 n_keyboard.add_button('elect list', VkKeyboardColor.SECONDARY)
                 write_msg(event.user_id, f'Для перехода к следующему профилю нажмите next', n_keyboard)
-                person = vk_ex.message_send_photo(event.user_id, bottoken)#вызов функции и вывод пользователя в сообщении
+                num = 1#значение для списка 1 профиля, для подгрузки в info_user нужного листа
+                person = vk_ex.message_send_photo(event.user_id, bottoken, num)#вызов функции и вывод пользователя в сообщении
             elif request == "next":
-                vk_ex.message_send_photo(event.user_id, bottoken)
+                num = 1
+                vk_ex.message_send_photo(event.user_id, bottoken, num)
             elif request == "elect":
                 # МЕТОД ДОБАВЛЕНИЯ В ИЗБРАННЫЕ
                 pass
             elif request == "elect list":
+                num = 2#значение для списка избранных, для подгрузки в info_user нужного листа
+                vk_ex.message_send_photo(event.user_id, bottoken, num)
                 #МЕТОД ДОБАВЛЕНИЯ В ЧЕРНЫЙ СПИСОК
                 pass
             elif request == "нет":

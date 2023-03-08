@@ -85,7 +85,7 @@ class VkDownloader():
         n = min(3, len(num))#проверяем на количество в листе лайков и формируем от 1 до 3 в зависимости от количества в профиле
         max_numbers = sorted(num, reverse=True)[:n]#сортируем
         for links in photo_all:
-            if links['likes'] in max_numbers:
+            if links['likes'] in max_numbers and len(photo_3) < 3:
                 photo_3.append(links['id_photo'])#находим фото по лайкам
         return photo_3
 
@@ -111,7 +111,9 @@ class VkDownloader():
         link_id = f'https://vk.com/id{id_person}'#Получение ссылки на профиль
         name = profile_info["first_name"] + ' ' + profile_info["last_name"]#формирование имя и фамилии
         profile = {'id': id_person, 'name': name, 'link_id': link_id, 'attachment': attachment, 'user_id': user_list[4]}
-        return profile#Возвращаем инфу о профиле для вывода в функцию message_send_photo
+        profile_list = []
+        profile_list.append(profile)
+        return profile_list#Возвращаем инфу о профиле для вывода в функцию message_send_photo
 
     def extract_random(self, lst):#функция рандома с удалением индекса из списка
         if not lst:
@@ -120,22 +122,27 @@ class VkDownloader():
         return lst.pop(index)
     
     
-    def message_send_photo(self, user_id, bottoken):#функция принимает токен группы и словарь с данными людей
-        profile_1 = self.get_profile_1(user_id)#получаем профиль искомого пользователя
-        user_id = profile_1['user_id']#ваш id
-        name = profile_1['name']#имя и фамилия пользователя
-        link = profile_1['link_id']#ссылка на профиль пользователя
-        message = f'{name}\n {link}'#сообщение для ответа
-        att = profile_1['attachment']#а вот и наш attachment, который присылает фото в сообщении
-        url_photo = 'https://api.vk.com/method/messages.send'
-        params = {
-            'user_id': user_id,
-            'random_id': randrange(10 ** 7),
-            'message': message,# имя, фамилия и ссылка на профиль
-            'attachment': att,#для вывода 3 фоток сразу
-            'access_token': bottoken,
-            'v': 5.131
-        }
+    def message_send_photo(self, user_id, bottoken, num):#функция принимает токен группы и словарь с данными людей
+        if num == 1:
+            profile_list = self.get_profile_1(user_id)#получаем профиль искомого пользователя
+        else:
+            # profile_list = self.#получаем список избранных для печати
+            pass
+        for profile_1 in profile_list:
+            user_id = profile_1['user_id']#ваш id
+            name = profile_1['name']#имя и фамилия пользователя
+            link = profile_1['link_id']#ссылка на профиль пользователя
+            message = f'{name}\n {link}'#сообщение для ответа
+            att = profile_1['attachment']#а вот и наш attachment, который присылает фото в сообщении
+            url_photo = 'https://api.vk.com/method/messages.send'
+            params = {
+                'user_id': user_id,
+                'random_id': randrange(10 ** 7),
+                'message': message,# имя, фамилия и ссылка на профиль
+                'attachment': att,#для вывода 3 фоток сразу
+                'access_token': bottoken,
+                'v': 5.131
+            }
 
-        requests.get(url_photo, params=params)#печатаем в чат
-        return profile_1
+            requests.get(url_photo, params=params)#печатаем в чат
+        return profile_list
