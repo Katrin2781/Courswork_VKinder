@@ -94,15 +94,12 @@ class VkDownloader():
         user_list = self.user_info(user_id)#
         get_info_max_id = self.user_search(user_list)#
         profile_needs = []
-        count = 0
         #ДЕЛАЕМ ОТБОР ПО ОТКРЫТОМУ ПРОФИЛЮ И ИМЕЮЩЕЙСЯ ФОТКЕ
         for values in get_info_max_id["response"]["items"]:
             if values["is_closed"] == False and values["has_photo"] == 1:
                 profile_needs.append(values)
-                count +=1
         #СЮДА ПИШЕМ РАНДОМ ДЛЯ profile_needs
         profile_info = self.extract_random(profile_needs)
-        # profile_needs.remove(profile_info) как удалить элемент из списка?
         #ВЫДЕЛЯЕМ ЭЛЕМЕНТЫ ЕДИНИЧНОГО id
         id_person = profile_info["id"]
         #ПОЛУЧАЕМ ЗНАЧЕНИЕ ДЛЯ 3 ФОТО ПО id
@@ -113,7 +110,7 @@ class VkDownloader():
             attachment.append(attachment_one)
         attachment = ','.join(attachment)
         link_id = f'https://vk.com/id{id_person}'
-        name = values["first_name"] + ' ' + values["last_name"]
+        name = profile_info["first_name"] + ' ' + profile_info["last_name"]
         profile = {'id': id_person, 'name': name, 'link_id': link_id, 'attachment': attachment, 'user_id': user_list[4]}
         return profile#Возвращаем инфу о профиле для вывода в функцию message_send_photo
 
