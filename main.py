@@ -1,15 +1,13 @@
 import vk_api
 from random import randrange
 from vk_api.longpoll import VkLongPoll, VkEventType
-from info_user import VkDownloader
 from config_read import bottoken, perstoken
 from vk_api.keyboard import VkKeyboard, VkKeyboardColor
-
-
+from DB_vkinder import add_elect
+from info_user import VkDownloader
 
 vk = vk_api.VkApi(token=bottoken)
 longpoll = VkLongPoll(vk)
-
 
 
 def write_msg(user_id, message, keyboard=None):
@@ -48,17 +46,19 @@ for event in longpoll.listen():
                 write_msg(event.user_id, f'Для перехода к следующему профилю нажмите next', n_keyboard)
                 num = 1#значение для списка 1 профиля, для подгрузки в info_user нужного листа
                 person = vk_ex.message_send_photo(event.user_id, bottoken, num)#вызов функции и вывод пользователя в сообщении
+
             elif request == "next":
                 num = 1
-                vk_ex.message_send_photo(event.user_id, bottoken, num)
+                person = vk_ex.message_send_photo(event.user_id, bottoken, num)
             elif request == "elect":
                 # МЕТОД ДОБАВЛЕНИЯ В ИЗБРАННЫЕ
-                pass
+                try:
+                    add_elect(person)
+                except NameError:
+                    write_msg(event.user_id, 'Сначала нужно выбрать следующего кандидата!')
             elif request == "elect list":
                 num = 2#значение для списка избранных, для подгрузки в info_user нужного листа
                 vk_ex.message_send_photo(event.user_id, bottoken, num)
-                #МЕТОД ДОБАВЛЕНИЯ В ЧЕРНЫЙ СПИСОК
-                pass
             elif request == "нет":
                 write_msg(event.user_id, f"Это чат для знакомств, нам больше нечего предложить, досвидания")
             elif request == "пока":

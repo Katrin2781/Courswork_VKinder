@@ -1,7 +1,9 @@
 import requests
 from datetime import date
 from random import randrange
-from DB_vkinder import insert_user
+from DB_vkinder import insert_user, insert_find, select_elect
+
+
 
 class VkDownloader():
 
@@ -24,7 +26,6 @@ class VkDownloader():
             bdate = value['bdate']#ваша дата рождения
             name = value['first_name'] + ' ' + value['last_name']#ваше имя и фамилия
             user_list = [city, sex, name, bdate, user_id]#общий лист с вашими данными
-
             insert_user(user_list)
             return user_list
 
@@ -122,12 +123,12 @@ class VkDownloader():
         return lst.pop(index)
     
     
-    def message_send_photo(self, user_id, bottoken, num):#функция принимает токен группы и словарь с данными людей
+    def message_send_photo(self, user_id, bottoken, num, profile_list=[]):#функция принимает токен группы и словарь с данными людей
         if num == 1:
             profile_list = self.get_profile_1(user_id)#получаем профиль искомого пользователя
+            insert_find(profile_list)
         else:
-            # profile_list = self.#получаем список избранных для печати
-            pass
+            profile_list = select_elect(user_id)#получаем список избранных для печати
         for profile_1 in profile_list:
             user_id = profile_1['user_id']#ваш id
             name = profile_1['name']#имя и фамилия пользователя
@@ -145,4 +146,6 @@ class VkDownloader():
             }
 
             requests.get(url_photo, params=params)#печатаем в чат
+
+
         return profile_list
