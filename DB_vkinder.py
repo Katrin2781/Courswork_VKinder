@@ -88,7 +88,7 @@ def select_elect(user):
                         where l.id_user = %s and l.chosen = 'T' and l.id_find = fu.id_find''', (user,))
         persons = []
         for row in cursor.fetchall():
-            dict_person = {'id': row[0], 'name': row[1], 'link_id': row[2], 'attachment': row[3], 'user_id': row[4]}
+            dict_person = {'id': row[0], 'name': row[1], 'link_id': row[2], 'attachment': None, 'user_id': row[4]}
             persons.append(dict_person)
         return persons
 
