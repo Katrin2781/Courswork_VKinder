@@ -1,7 +1,7 @@
 import requests
 from datetime import date
 from random import randrange
-from DB_vkinder import insert_user, insert_find, select_elect
+from DB_vkinder import insert_user, insert_find, select_elect, select_black
 
 
 
@@ -125,6 +125,8 @@ class VkDownloader():
     
     def message_send_photo(self, user_id, bottoken, num):#функция принимает токен группы и словарь с данными людей
         if num == 1:
+            id_black = select_black(user_id) #возвращает черный список
+            # ПРИДУМАЙТЕ ЧТО С НИМ СДЕЛАТЬ)))))!!!!!!!!!!!!!
             profile_list = self.get_profile_1(user_id)#получаем профиль искомого пользователя
             insert_find(profile_list)
         else:

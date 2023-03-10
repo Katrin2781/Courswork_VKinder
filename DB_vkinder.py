@@ -78,6 +78,17 @@ def add_elect(profile_list):
     con.close()
 
 
+def add_blacklist(profile_list):
+    # добавление пометки черный список
+    con = connect_db()
+    with con.cursor() as cursor:
+        cursor.execute("Select max(id_find) from find_users;")
+        idf = cursor.fetchone()[0]
+        cursor.execute("UPDATE links SET blacklist=%s WHERE id_user=%s and id_find=%s;",
+                       (True, profile_list[0]['user_id'], idf))
+        con.commit()
+    con.close()
+
 def select_elect(user):
     # выбор всех избранных для текущего пользователя
     con = connect_db()
@@ -91,6 +102,21 @@ def select_elect(user):
             dict_person = {'id': row[0], 'name': row[1], 'link_id': row[2], 'attachment': None, 'user_id': row[4]}
             persons.append(dict_person)
         return persons
+
+
+def select_black(user):
+    # выбор всех из черного списка для текущего пользователя
+    con = connect_db()
+    with con.cursor() as cursor:
+        cursor.execute('''select
+                        fu.id_vk, fu.nikname, fu.link_profile, fu.attachment, l.id_user 
+                        from links l, find_users fu
+                        where l.id_user = %s and l.blacklist = 'T' and l.id_find = fu.id_find''', (user,))
+        id_black = []
+        for row in cursor.fetchall():
+            dict_person = {'id': row[0], 'name': row[1], 'link_id': row[2], 'attachment': None, 'user_id': row[4]}
+            id_black.append(dict_person)
+        return id_black
 
 
 def create_tables(cur,con):
