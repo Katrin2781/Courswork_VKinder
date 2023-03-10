@@ -3,7 +3,7 @@ from random import randrange
 from vk_api.longpoll import VkLongPoll, VkEventType
 from config_read import bottoken, perstoken
 from vk_api.keyboard import VkKeyboard, VkKeyboardColor
-from DB_vkinder import add_elect,add_blacklist,select_black
+from DB_vkinder import add_elect,add_blacklist, select_black
 from info_user import VkDownloader
 
 

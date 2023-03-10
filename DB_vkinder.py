@@ -130,7 +130,7 @@ def select_black(user):
         return id_black
 
 
-def create_tables(cur,con):
+def create_tables(cur, con):
     # создание таблиц в БД
     cur.execute('''create table IF NOT exists Users(
                                         id_user_VK INTEGER primary key,

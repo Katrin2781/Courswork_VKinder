@@ -58,7 +58,7 @@ class VkDownloader():
         return res#возврат json пользователей
         
 
-    def get_photo(self, id):#функция выгрузки фото с профиля
+    def get_photo(self, id):#функция фото с профиля
         photo_all = []#список для всех фото одного пользователя
         photo_3 = []#список для 3 фото
         num = []#список для отбора по лайкам
@@ -96,7 +96,7 @@ class VkDownloader():
         profile_needs = []#пустой список для отобранных пользователей по критериям
         #ДЕЛАЕМ ОТБОР ПО ОТКРЫТОМУ ПРОФИЛЮ И ИМЕЮЩЕЙСЯ ФОТКЕ
         for values in get_info_max_id["response"]["items"]:
-            if values['id'] in id_black: # если id профиля есть в черном списке, то его пропускает
+            if values['id'] in id_black:# если id профиля есть в черном списке, то его пропускает
                 continue
             if values["is_closed"] == False and values["has_photo"] == 1:#сортируем по открытому акку и наличию фото
                 profile_needs.append(values)#добавляем в лист
