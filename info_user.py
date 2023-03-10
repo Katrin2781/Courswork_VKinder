@@ -90,12 +90,14 @@ class VkDownloader():
                 photo_3.append(links['id_photo'])#находим фото по лайкам
         return photo_3
 
-    def get_profile_1(self, user_id):#функция для вызова всех функций
+    def get_profile_1(self, user_id, id_black=[]):#функция для вызова всех функций
         user_list = self.user_info(user_id)#получаем данные нашего пользователя
         get_info_max_id = self.user_search(user_list)#производим поиск подходящих пользователей
         profile_needs = []#пустой список для отобранных пользователей по критериям
         #ДЕЛАЕМ ОТБОР ПО ОТКРЫТОМУ ПРОФИЛЮ И ИМЕЮЩЕЙСЯ ФОТКЕ
         for values in get_info_max_id["response"]["items"]:
+            if values['id'] in id_black: # если id профиля есть в черном списке, то его пропускает
+                continue
             if values["is_closed"] == False and values["has_photo"] == 1:#сортируем по открытому акку и наличию фото
                 profile_needs.append(values)#добавляем в лист
         #РАНДОМ ДЛЯ profile_needs
@@ -122,15 +124,16 @@ class VkDownloader():
         index = randrange(len(lst))
         return lst.pop(index)
     
-    
+
     def message_send_photo(self, user_id, bottoken, num):#функция принимает токен группы и словарь с данными людей
         if num == 1:
             id_black = select_black(user_id) #возвращает черный список
-            # ПРИДУМАЙТЕ ЧТО С НИМ СДЕЛАТЬ)))))!!!!!!!!!!!!!
-            profile_list = self.get_profile_1(user_id)#получаем профиль искомого пользователя
+            profile_list = self.get_profile_1(user_id, id_black)#получаем профиль искомого пользователя
             insert_find(profile_list)
         else:
             profile_list = select_elect(user_id)
+            if not profile_list:
+                return False
             #получаем список избранных для печати
         for profile_1 in profile_list:
             user_id = profile_1['user_id']#ваш id

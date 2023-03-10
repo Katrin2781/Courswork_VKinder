@@ -6,6 +6,7 @@ from vk_api.keyboard import VkKeyboard, VkKeyboardColor
 from DB_vkinder import add_elect,add_blacklist,select_black
 from info_user import VkDownloader
 
+
 vk = vk_api.VkApi(token=bottoken)
 longpoll = VkLongPoll(vk)
 
@@ -63,17 +64,25 @@ for event in longpoll.listen():
                 # МЕТОД ДОБАВЛЕНИЯ В ИЗБРАННЫЕ
                 try:
                     if black:
-                        write_msg(event.user_id, 'Нужно посмотреть кто там дальше...')
+                        write_msg(event.user_id, 'Нужно посмотреть кто там дальше... Нажмите Следующий!')
                     else:
                         add_elect(person)
-                        write_msg(event.user_id, 'Отличный выбор!')
+                        answers = ['Отличный выбор!',
+                                   'Неплохой вариант!',
+                                   'Мне тоже нравится!',
+                                   'У тебя хороший вкус!']
+                        index = randrange(len(answers))
+                        write_msg(event.user_id, answers[index]+' Посмотрим ещё? Нажимай Следующий!')
                         chosen = True
                 except NameError:
                     write_msg(event.user_id, 'Сегодня мы ещё не видились. '
                                              'Сначала нужно выбрать следующего кандидата!')
             elif request == "список избранных":
                 num = 2#значение для списка избранных, для подгрузки в info_user нужного листа
-                vk_ex.message_send_photo(event.user_id, bottoken, num)
+                result = vk_ex.message_send_photo(event.user_id, bottoken, num)
+                if not result:
+                    write_msg(event.user_id, 'У вас пока нет никого в Избранном. Давайте их поищём?'
+                                             'Нажмите Следующий!')
             elif request == "в черный список":
                 # МЕТОД ДОБАВЛЕНИЯ В ЧЕРНЫЙ СПИСОК
                 try:
@@ -85,7 +94,12 @@ for event in longpoll.listen():
                         vk_api = vk.get_api()
                         message_id = data['items'][0]['last_message']['id']-1
                         vk_api.messages.delete(delete_for_all=1, message_ids=message_id)
-                        write_msg(event.user_id, 'Мне тоже не понравился этот профиль!')
+                        answers = ['Мне тоже не понравился этот профиль!',
+                                   'Я бы тоже так сделал!',
+                                   'Не в твоём вкусе?'
+                                   ]
+                        index = randrange(len(answers))
+                        write_msg(event.user_id, answers[index] + ' Посмотрим ещё? Нажимай Следующий!')
                         add_blacklist(person)
 
                 except NameError:
