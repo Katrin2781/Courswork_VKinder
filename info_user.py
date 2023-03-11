@@ -7,6 +7,7 @@ from DB_vkinder import insert_user, insert_find, select_elect, select_black
 
 class VkDownloader():
 
+
     def __init__(self, token):
         self.token = token
 
@@ -29,15 +30,14 @@ class VkDownloader():
             insert_user(user_list)
             return user_list
 
-    # Используется только Токен персональный
+    
     def user_search(self, data):
         url_info = 'https://api.vk.com/method/users.search'
         if data[1] == 1:#условие по полу
             sex = 2
         else:
             sex = 1
-        #калькулятор по вычислению лет
-        today = date.today()
+        today = date.today()#калькулятор по вычислению лет
         get_year = data[3].split('.')
         day = int(get_year[0])
         month = int(get_year[1])
@@ -54,7 +54,6 @@ class VkDownloader():
             'v': 5.131
             }
         res = requests.get(url_info, params=params).json()
-
         return res#возврат json пользователей
         
 
@@ -72,16 +71,12 @@ class VkDownloader():
             'v': 5.131
         }
         res = requests.get(url_photo, params=params).json()
-
-        #находим ссылки на фото и количество лайков, создаем словари и добавляем их в списко
-        for values in res["response"]["items"]:
+        for values in res["response"]["items"]:#находим ссылки на фото и количество лайков, создаем словари и добавляем их в списко
             file_likes = values["likes"]["count"]#количество лайков фото
             id_photo = values["id"]#id фото
             file_photo = {'id_photo': id_photo, 'likes': file_likes}#отдельный словарик для фото+лайк
             photo_all.append(file_photo)
-
-        #все лайки переношу в список, сортирую, остается 3 самых больших значения
-        for links in photo_all:
+        for links in photo_all:#все лайки переношу в список, сортирую, остается 3 самых больших значения
             num.append(links['likes'])#собираем лайки фоток в один список
         n = min(3, len(num))#проверяем на количество в листе лайков и формируем от 1 до 3 в зависимости от количества в профиле
         max_numbers = sorted(num, reverse=True)[:n]#сортируем
@@ -93,21 +88,18 @@ class VkDownloader():
             return photo_final
         return photo_3
 
+
     def get_profile_1(self, user_id, id_black=[]):#функция для вызова всех функций
         user_list = self.user_info(user_id)#получаем данные нашего пользователя
         get_info_max_id = self.user_search(user_list)#производим поиск подходящих пользователей
         profile_needs = []#пустой список для отобранных пользователей по критериям
-        #ДЕЛАЕМ ОТБОР ПО ОТКРЫТОМУ ПРОФИЛЮ И ИМЕЮЩЕЙСЯ ФОТКЕ
-        for values in get_info_max_id["response"]["items"]:
+        for values in get_info_max_id["response"]["items"]:#ДЕЛАЕМ ОТБОР ПО ОТКРЫТОМУ ПРОФИЛЮ И ИМЕЮЩЕЙСЯ ФОТКЕ
             if values['id'] in id_black:# если id профиля есть в черном списке, то его пропускает
                 continue
             if values["is_closed"] == False and values["has_photo"] == 1:#сортируем по открытому акку и наличию фото
                 profile_needs.append(values)#добавляем в лист
-        #РАНДОМ ДЛЯ profile_needs
-        profile_info = self.extract_random(profile_needs)
-        #ВЫДЕЛЯЕМ ЭЛЕМЕНТЫ ЕДИНИЧНОГО id
-        id_person = profile_info["id"]
-        #ПОЛУЧАЕМ ЗНАЧЕНИЕ ДЛЯ 3 ФОТО ПО id
+        profile_info = self.extract_random(profile_needs)#РАНДОМ ДЛЯ profile_needs
+        id_person = profile_info["id"]#ВЫДЕЛЯЕМ ЭЛЕМЕНТЫ ЕДИНИЧНОГО id
         photo_profile = self.get_photo(id_person)#получаем инфу 3 фоток
         attachment = []#создаем пустой список для поля attachment
         for photo in photo_profile:#формирование attachment для функции message_send_photo на печать фото
@@ -116,10 +108,17 @@ class VkDownloader():
         attachment = ','.join(attachment)#соединяем для вывода сразу всех значений в функции message_send_photo
         link_id = f'https://vk.com/id{id_person}'#Получение ссылки на профиль
         name = profile_info["first_name"] + ' ' + profile_info["last_name"]#формирование имя и фамилии
-        profile = {'id': id_person, 'name': name, 'link_id': link_id, 'attachment': attachment, 'user_id': user_list[4]}
+        profile = {
+            'id': id_person, 
+            'name': name, 
+            'link_id': link_id, 
+            'attachment': attachment, 
+            'user_id': user_list[4]
+            }
         profile_list = []
         profile_list.append(profile)
         return profile_list#Возвращаем инфу о профиле для вывода в функцию message_send_photo
+
 
     def extract_random(self, lst):#функция рандома с удалением индекса из списка
         if not lst:
@@ -137,8 +136,7 @@ class VkDownloader():
             profile_list = select_elect(user_id)
             if not profile_list:
                 return False
-            #получаем список избранных для печати
-        for profile_1 in profile_list:
+        for profile_1 in profile_list:#получаем список избранных для печати
             user_id = profile_1['user_id']#ваш id
             name = profile_1['name']#имя и фамилия пользователя
             link = profile_1['link_id']#ссылка на профиль пользователя
@@ -153,8 +151,5 @@ class VkDownloader():
                 'access_token': bottoken,
                 'v': 5.131
             }
-
             requests.get(url_photo, params=params)#печатаем в чат
-
-
         return profile_list
