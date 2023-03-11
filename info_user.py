@@ -87,6 +87,9 @@ class VkDownloader():
         for links in photo_all:
             if links['likes'] in max_numbers:
                 photo_3.append(links['id_photo'])#находим фото по лайкам
+        if len(photo_3) >= 4:
+            photo_final = photo_3[:3]
+            return photo_final
         return photo_3
 
     def get_profile_1(self, user_id):#функция для вызова всех функций
